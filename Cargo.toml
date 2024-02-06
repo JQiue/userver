@@ -1,0 +1,22 @@
+[package]
+name = "userver"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.35.1", features = ["macros", "rt-multi-thread"] }
+axum = "0.7.4"
+tower-http = { version = "0.5.0", features = ["fs", "cors"] }
+http = { version = "1.0.0" }
+serde_json = { version = "1.0.108" }
+rust-embed = { version = "8.2.0", features = ["debug-embed"] }
+local-ip-address = "0.5.6"
+
+[profile.release]
+lto = true        # 链接时间优化(LTO)是一种整体程序优化技术，可以将运行时性能提高 10-20% 甚至更多
+codegen-units = 1 # crate 分割成多个 codegen units，以实现并行化（从而加快）编译。然而，这可能会导致它错过一些潜在的优化。如果你想以更大的编译时间为代价来潜在地提高运行时性能，可以将单元数设置为一个
+panic = "abort"   # 如果不需要捕捉或解除恐慌，可以告诉编译器在恐慌时简单地中止。这可能会减少二进制大小，并略微提高性能
+strip = true      # 自动从二进制中剥离符号
+opt-level = "s"   # 优化二进制大小，可以有多个选项，在平衡中决定是否激进
