@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usever</title>
+  <script src="./vue.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <ul>
+      <!-- <li><a v-on:click="handleClick">{{get_parent_directory()}}</a></li> -->
+      <li><span>{{current_dir}}</span></li>
+      <li v-for="item in list" :key="item">
+        <span :href="item.filename" v-if="item.is_file" v-on:click="download(item.filename)">{{item.filename}}</span>
+        <span style="color: blue; cursor: pointer; " v-else
+          v-on:click="get_list(item.filename)">{{item.filename}}</span>
+      </li>
+    </ul>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        list: [],
+        current_dir: "",
+      },
+      methods: {
+        async get_list(path = ".\\") {
+          this.current_dir = path;
+          const resp = await fetch(`http://localhost:1998/list?path=${path}`);
+          const data = await resp.json();
+          if (data.code == 200) {
+            this.list = data.payload.list
+          } else {
+            alert(data.payload.msg);
+          }
+        },
+        download(filename) {
+          const a = document.createElement("a");
+          a.href = filename;
+          a.download = filename;
+          a.click();
+        },
+        get_parent_directory() {
+          return "当前目录"
+        },
+        handleClick() {
+          this.get_list(this.get_parent_directory());
+        }
+      },
+      mounted() {
+        this.get_list();
+      },
+    });
+  </script>
+</body>
+
+</html>

@@ -13,6 +13,7 @@ http = { version = "1.0.0" }
 serde_json = { version = "1.0.108" }
 rust-embed = { version = "8.2.0", features = ["debug-embed"] }
 local-ip-address = "0.5.6"
+serde = { version = "1.0.197", features = ["derive"] }
 
 [profile.release]
 lto = true        # 链接时间优化(LTO)是一种整体程序优化技术，可以将运行时性能提高 10-20% 甚至更多
